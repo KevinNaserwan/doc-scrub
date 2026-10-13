@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocScrub 🛡️ - Pembersih Dokumen & Privasi 100% Offline</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --success: #10b981;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 32px 16px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    header h1 {
+      font-size: 32px;
+      margin: 0 0 8px;
+      color: #38bdf8;
+    }
+    header p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 16px;
+    }
+    .badge-offline {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+      border: 1px solid var(--success);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 16px;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    textarea {
+      width: 100%;
+      height: 240px;
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #f1f5f9;
+      padding: 12px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .stats-bar {
+      display: flex;
+      gap: 12px;
+      background: #111827;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      background: #1f2937;
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: var(--primary-hover);
+    }
+    .btn-secondary {
+      background: #334155;
+    }
+    .btn-secondary:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>DocScrub 🛡️</h1>
+      <p>Pembersih Dokumen & Privasi Teks Otomatis untuk Semua Orang (Non-Tech Friendly)</p>
+      <span class="badge-offline">🔒 100% Aman & Diproses Lokal di Perangkat Anda (Tanpa Kirim ke Server)</span>
+    </header>
+
+    <div class="stats-bar" id="statsBar">
+      <span>Status: <strong style="color:var(--success)">Siap Membersihkan</strong></span>
+      <span>• Email Disamarkan: <span class="stat-pill" id="cntEmail">0</span></span>
+      <span>• NIK / KTP Disamarkan: <span class="stat-pill" id="cntNik">0</span></span>
+      <span>• No. HP Disamarkan: <span class="stat-pill" id="cntPhone">0</span></span>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>
+          <span>Teks Asli / Dokumen Mentah</span>
+          <button class="btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="loadSample()">Isi Contoh</button>
+        </h3>
+        <textarea id="inputText" placeholder="Ketik atau tempel teks dokumen di sini (misal: surat, biodata, catatan keuangan)..."></textarea>
+      </div>
+
+      <div class="card">
+        <h3>
+          <span>Hasil Bersih (Siap Dibagikan)</span>
+          <button class="btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="copyResult()">Salin Hasil</button>
+        </h3>
+        <textarea id="outputText" readonly placeholder="Teks yang telah dibersihkan dari NIK, Email, dan No. HP akan muncul otomatis di sini..."></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button onclick="cleanDocument()">✨ Bersihkan Teks Sekarang</button>
+    </div>
+  </div>
+
+  <script>
+    function cleanDocument() {
+      const input = document.getElementById('inputText').value;
+      if (!input.trim()) return;
+
+      let emailCount = 0;
+      let phoneCount = 0;
+      let nikCount = 0;
+
+      // Sanitization pipeline
+      let sanitized = input
+        .replace(/([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)/g, () => {
+          emailCount++;
+          return '[EMAIL TERSEMBUNYI]';
+        })
+        .replace(/\b(\+62|62|08)[0-9]{8,12}\b/g, () => {
+          phoneCount++;
+          return '[NO HP TERSEMBUNYI]';
+        })
+        .replace(/\b[1-9][0-9]{15}\b/g, () => {
+          nikCount++;
+          return '[NIK/KTP TERSEMBUNYI]';
+        });
+
+      document.getElementById('outputText').value = sanitized;
+      document.getElementById('cntEmail').innerText = emailCount;
+      document.getElementById('cntPhone').innerText = phoneCount;
+      document.getElementById('cntNik').innerText = nikCount;
+    }
+
+    function loadSample() {
+      document.getElementById('inputText').value = 
+`Yth. Bapak/Ibu HRD,
+
+Berikut adalah data konfirmasi calon karyawan baru:
+Nama: Kevin Naserwan
+Email: kevin.naserwan@gmail.com
+Nomor Telepon: 081298765432
+NIK KTP: 3271012345678901
+Alamat: Jakarta Selatan
+
+Mohon dokumen ini diproses secara rahasia.`;
+      cleanDocument();
+    }
+
+    function copyResult() {
+      const out = document.getElementById('outputText');
+      out.select();
+      navigator.clipboard.writeText(out.value);
+      alert('Teks bersih berhasil disalin ke clipboard!');
+    }
+
+    document.getElementById('inputText').addEventListener('input', cleanDocument);
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[package]
+name = "doc-scrub-core"
+version = "1.0.0"
+edition = "2021"
+authors = ["Kevin Naserwan <kevinnaserwan@gmail.com>"]
+description = "High-performance privacy document & text sanitizer engine in Rust"
+license = "MIT"
+
+[lib]
+crate-type = ["rlib"]
