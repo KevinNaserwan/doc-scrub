@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DocScrub 🛡️ - Pembersih Dokumen & Privasi 100% Offline</title>
+  <title>DocScrub 🛡️ - 100% Offline Document & Text Privacy Sanitizer</title>
   <style>
     :root {
       --primary: #2563eb;
@@ -146,37 +146,37 @@
   <div class="container">
     <header>
       <h1>DocScrub 🛡️</h1>
-      <p>Pembersih Dokumen & Privasi Teks Otomatis untuk Semua Orang (Non-Tech Friendly)</p>
-      <span class="badge-offline">🔒 100% Aman & Diproses Lokal di Perangkat Anda (Tanpa Kirim ke Server)</span>
+      <p>Automated Document & Text Privacy Sanitizer for Everyone (Non-Tech Friendly)</p>
+      <span class="badge-offline">🔒 100% Secure & Processed Locally on Your Device (Zero Data Uploads)</span>
     </header>
 
     <div class="stats-bar" id="statsBar">
-      <span>Status: <strong style="color:var(--success)">Siap Membersihkan</strong></span>
-      <span>• Email Disamarkan: <span class="stat-pill" id="cntEmail">0</span></span>
-      <span>• NIK / KTP Disamarkan: <span class="stat-pill" id="cntNik">0</span></span>
-      <span>• No. HP Disamarkan: <span class="stat-pill" id="cntPhone">0</span></span>
+      <span>Status: <strong style="color:var(--success)">Ready to Sanitize</strong></span>
+      <span>• Emails Masked: <span class="stat-pill" id="cntEmail">0</span></span>
+      <span>• National IDs Masked: <span class="stat-pill" id="cntNik">0</span></span>
+      <span>• Phone Numbers Masked: <span class="stat-pill" id="cntPhone">0</span></span>
     </div>
 
     <div class="grid">
       <div class="card">
         <h3>
-          <span>Teks Asli / Dokumen Mentah</span>
-          <button class="btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="loadSample()">Isi Contoh</button>
+          <span>Raw Input Text / Document</span>
+          <button class="btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="loadSample()">Load Sample</button>
         </h3>
-        <textarea id="inputText" placeholder="Ketik atau tempel teks dokumen di sini (misal: surat, biodata, catatan keuangan)..."></textarea>
+        <textarea id="inputText" placeholder="Paste or type raw text here (e.g. letters, resume data, financial notes)..."></textarea>
       </div>
 
       <div class="card">
         <h3>
-          <span>Hasil Bersih (Siap Dibagikan)</span>
-          <button class="btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="copyResult()">Salin Hasil</button>
+          <span>Sanitized Output (Ready to Share)</span>
+          <button class="btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="copyResult()">Copy Output</button>
         </h3>
-        <textarea id="outputText" readonly placeholder="Teks yang telah dibersihkan dari NIK, Email, dan No. HP akan muncul otomatis di sini..."></textarea>
+        <textarea id="outputText" readonly placeholder="Text sanitized of IDs, Emails, and Phone Numbers will appear automatically here..."></textarea>
       </div>
     </div>
 
     <div class="actions">
-      <button onclick="cleanDocument()">✨ Bersihkan Teks Sekarang</button>
+      <button onclick="cleanDocument()">✨ Sanitize Text Now</button>
     </div>
   </div>
 
@@ -193,15 +193,15 @@
       let sanitized = input
         .replace(/([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)/g, () => {
           emailCount++;
-          return '[EMAIL TERSEMBUNYI]';
+          return '[REDACTED_EMAIL]';
         })
         .replace(/\b(\+62|62|08)[0-9]{8,12}\b/g, () => {
           phoneCount++;
-          return '[NO HP TERSEMBUNYI]';
+          return '[REDACTED_PHONE]';
         })
         .replace(/\b[1-9][0-9]{15}\b/g, () => {
           nikCount++;
-          return '[NIK/KTP TERSEMBUNYI]';
+          return '[REDACTED_ID]';
         });
 
       document.getElementById('outputText').value = sanitized;
@@ -212,16 +212,16 @@
 
     function loadSample() {
       document.getElementById('inputText').value = 
-`Yth. Bapak/Ibu HRD,
+`Dear Hiring Team,
 
-Berikut adalah data konfirmasi calon karyawan baru:
-Nama: Kevin Naserwan
+Here is the applicant confirmation data:
+Name: Kevin Naserwan
 Email: kevin.naserwan@gmail.com
-Nomor Telepon: 081298765432
-NIK KTP: 3271012345678901
-Alamat: Jakarta Selatan
+Phone Number: 081298765432
+National ID / NIK: 3271012345678901
+Location: South Jakarta
 
-Mohon dokumen ini diproses secara rahasia.`;
+Please handle this document strictly under privacy guidelines.`;
       cleanDocument();
     }
 
@@ -229,7 +229,7 @@ Mohon dokumen ini diproses secara rahasia.`;
       const out = document.getElementById('outputText');
       out.select();
       navigator.clipboard.writeText(out.value);
-      alert('Teks bersih berhasil disalin ke clipboard!');
+      alert('Sanitized text copied to clipboard successfully!');
     }
 
     document.getElementById('inputText').addEventListener('input', cleanDocument);

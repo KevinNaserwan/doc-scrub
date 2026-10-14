@@ -8,53 +8,74 @@
 
 ---
 
-## 📌 Mengapa DocScrub Dibuat? (Untuk Siapa Saja)
-Setiap hari, staf HRD, tim legal, akuntan, guru, dan masyarakat umum harus membagikan dokumen atau tangkapan layar surat. Namun, sering kali dokumen tersebut mengandung data pribadi sensitif seperti **Nomor Induk Kependudukan (NIK/KTP)**, **alamat email pribadi**, **nomor WhatsApp/telepon**, atau **rekening bank**.
+## 📌 Why DocScrub? (Built for Everyone)
+Every day, HR staff, legal teams, accountants, educators, and everyday people need to share documents, scanned letters, and screenshots. However, these documents often contain sensitive Personally Identifiable Information (**PII**) such as **National Identification Numbers (NIK/SSN)**, **personal email addresses**, **phone/WhatsApp numbers**, or **credit card details**.
 
-Layanan online seperti PDF converter umumnya mengunggah berkas ke server luar negeri, yang membahayakan privasi dan melanggar aturan perlindungan data pribadi (UU PDP / GDPR).
+Most free online document converters and text utilities upload your files to remote cloud servers, putting privacy at risk and potentially violating strict data protection regulations (**GDPR, HIPAA, and UU PDP**).
 
-**`doc-scrub`** hadir sebagai solusi sederhana yang **bisa digunakan oleh siapa saja tanpa perlu mengerti koding**:
-1. **100% Offline di Perangkat Pengguna:** Tidak ada satu byte pun data yang dikirim ke internet atau server mana pun.
-2. **Otomatis Membersihkan Data Sensitif:** Cukup salin teks surat atau biodata, klik satu tombol, dan seluruh NIK, email, dan no HP otomatis disamarkan.
-
----
-
-## ✨ Fitur Utama
-
-* **⚡ Zero-Server / 100% Client-Side:** Seluruh proses scrubbing berjalan murni di peramban web (browser) pengguna menggunakan engine komputasi **Rust**.
-* **🔍 Deteksi Pola Cerdas (Smart PII Redactor):**
-  * NIK / KTP Indonesia (16 digit)
-  * Alamat Email
-  * Nomor Ponsel Indonesia (`08...`, `+62...`)
-  * Nomor Kartu Kredit / Debit
-* **🖥️ Tampilan Sederhana & Ramah Pengguna:** Dirancang bersih, modern, dan mudah dipahami oleh staf kantor maupun pengguna awam.
+**`doc-scrub`** provides an intuitive, foolproof solution that **anyone can use without any technical or coding knowledge**:
+1. **100% Offline & Client-Side:** Not a single byte of your data ever leaves your device or touches an external server.
+2. **Automated Sensitive Data Masking:** Simply paste your document text or letter, click one button, and sensitive IDs, emails, and phone numbers are redacted instantly.
 
 ---
 
-## 🚀 Cara Menggunakan
+## ✨ Key Features
 
-### Pengguna Umum (Non-Tech)
-Cukup buka file `web/index.html` langsung di browser Anda (Google Chrome, Firefox, Safari, Microsoft Edge). Tidak memerlukan koneksi internet atau instalasi apa pun!
+* **⚡ Zero-Server Architecture:** All sanitization computation executes strictly inside your local web browser, powered by a high-performance **Rust** engine.
+* **🔍 Intelligent Pattern Detection (Smart PII Redactor):**
+  * National ID Numbers (16-digit format / NIK)
+  * Email Addresses
+  * Mobile Phone Numbers (`+62...`, `08...`, international formats)
+  * Credit & Debit Card Numbers
+* **🖥️ Non-Tech Friendly Interface:** A clean, modern, distraction-free interface designed for office workers and general users.
+* **🔒 Peace of Mind:** Completely safe to use even when your device is fully disconnected from the internet.
 
-### Developer (Rust Core Library)
-Bagi pengembang perangkat lunak yang ingin mengintegrasikan engine privasi Rust ini ke dalam aplikasi mereka:
+---
+
+## 🚀 How to Use
+
+### For General Users (Non-Tech)
+Simply open [`web/index.html`](web/index.html) directly in any modern web browser (Google Chrome, Mozilla Firefox, Safari, Microsoft Edge). No command line, installation, or internet connection required!
+
+1. Paste or type your raw document text into the left panel.
+2. The PII detector will automatically identify and mask sensitive tokens in real time.
+3. Click **"Copy Result"** to copy the sanitized text directly to your clipboard.
+
+### For Developers (Rust Core Engine)
+Software engineers can easily embed the zero-dependency Rust core library into their backend services or desktop applications:
 
 ```rust
 use doc_scrub_core::DocScrubber;
 
 fn main() {
     let scrubber = DocScrubber::new();
-    let text = "Halo, nama saya Budi. Email: budi@ptba.co.id, No HP: 081299887766";
+    let text = "Hello, my name is Alex. Email: alex@example.com, Phone: 081299887766, ID: 3271012345678901";
     let report = scrubber.sanitize(text);
     
-    println!("Hasil Bersih: {}", report.sanitized_text);
-    println!("Email disamarkan: {}", report.emails_masked);
+    println!("Sanitized Text: {}", report.sanitized_text);
+    println!("Emails Masked: {}", report.emails_masked);
+    println!("Phones Masked: {}", report.phones_masked);
+    println!("IDs Masked: {}", report.niks_masked);
 }
 ```
 
 ---
 
-## 📄 Lisensi
-Proyek ini dilisensikan di bawah lisensi terbuka [MIT](LICENSE).
+## 🧪 Testing & Verification
 
-Dibuat dengan ❤️ oleh [Kevin Naserwan](https://github.com/KevinNaserwan).
+Run the Rust test suite:
+```bash
+cargo test
+```
+
+Verify WebAssembly target compilation:
+```bash
+cargo check --target wasm32-unknown-unknown
+```
+
+---
+
+## 📄 License
+This project is open-source and licensed under the [MIT License](LICENSE).
+
+Authored with ❤️ by [Kevin Naserwan](https://github.com/KevinNaserwan).
